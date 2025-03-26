@@ -3,20 +3,30 @@
 
 #include <iostream>
 #include <SDL_image.h>
+#include <string.h>
+#include <string>
+#include "Game/graphic.h"
+#include "terrain.h"
 
-class player {
+class Player {
     private:
         int x;
         int y;
         SDL_Texture* character_sprite;
-        Terrain playerTerrain;
+        Graphic& graphics;
     public:
-        SDL_Texture* getSprite();
+        Player(Graphic& graphics);
+        ~Player();
+
+        SDL_Texture* getSprite(Player player);
         void setSprite(SDL_Texture* sprite);
-        Terrain setTerrain();
+        void setPlayer(int x, int y, const std::string& filePath);
+        Terrain setTerrain(int newX, int newY, SDL_Texture* sprite);
         void updatePosition(int x, int y);
         std::pair<int, int> getPos();
         void setPos(int x, int y);
-};
+        SDL_Texture* getSprite();
+        void Player::render(SDL_Renderer* renderer);
+};      
 
 #endif
