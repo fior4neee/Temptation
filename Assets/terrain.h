@@ -1,25 +1,27 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#ifndef TERRAIN_H
+#define TERRAIN_H
 
 #include <iostream>
 #include <SDL_image.h>
-#include "Game/graphic.h"
+#include "graphic.h"
+#include "vector2.h"
 #include <string>
 
 class Terrain : public Graphic {
-    private:
-        int x;
-        int y;
+    protected:
+        SDL_Rect rect;
         SDL_Texture* terrain_sprite;
-        Graphic& graphics;
+        Graphic& graphic;
+        std::string texturePath;
     public:
-        Terrain(Graphic& graphics);
+        Vector2 position;
+        // Vector2 velocity; maybe in the future blocks are meant to move. not right now though. i am dead
+        Terrain(Graphic& graphic, float positionX, float positionY, SDL_Texture* sprite);
+        ~Terrain();
         SDL_Texture* getSprite();
         void setSprite(SDL_Texture* sprite);
-        Terrain setTerrain(int x, int y, const std::string& filePath);
-        std::pair<int, int> getPos();
-        void setPos(int x, int y);
-        void deleteTerrain();
+        void render();
+        std::string getTexturePath() { return texturePath;}
 };
 
 #endif

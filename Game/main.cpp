@@ -4,22 +4,27 @@
 
 int main(int argc, char* argv[]) {
     Graphic game;
-    game.initSDL(1000, 800, "Temptation");
+    game.initSDL(1200, 800, "Temptation");
 
     SDL_Renderer* renderer = game.getRenderer(); 
-
+    game.initMenu();
     bool running = true;
     SDL_Event e;
 
     while (running) {
         while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT) running = false;
+            // std::cout << "Event Type: " << e.type << std::endl;
+            game.handleEvents(e);
+            if (e.type == SDL_QUIT) {
+                running = false; break;
+            }
+            // if (e.type == SDL_MOUSEMOTION) {
+            //     std::cout << e.motion.x << " " << e.motion.y << std::endl;
+            // }
         }
-
+        
         SDL_RenderClear(renderer); 
-        game.renderLevel(renderer, 1);
-        SDL_Texture* hello = game.loadTexture("Imgs/Hello.png");
-        game.renderTexture(hello, 110, 200, 630, 500);
+        game.renderMenu(renderer);
         SDL_RenderPresent(renderer);
     }
 

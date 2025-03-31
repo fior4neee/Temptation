@@ -5,28 +5,38 @@
 #include <SDL_image.h>
 #include <string.h>
 #include <string>
-#include "Game/graphic.h"
+#include "graphic.h"
+#include "vector2.h"
 #include "terrain.h"
 
 class Player {
-    private:
-        int x;
-        int y;
+    protected:
+        int velocityX;
+        int velocityY;
         SDL_Texture* character_sprite;
-        Graphic& graphics;
+        Graphic& graphic;
     public:
-        Player(Graphic& graphics);
+        Vector2 position;
+        Vector2 velocity;
+        Player(Graphic& graphic, float startX, float startY, SDL_Texture* character_sprite);
         ~Player();
 
+        void update(float deltaTime) {
+            position += velocity * deltaTime;
+        }
+        void setPos(Vector2 position) {
+            this->position = position;
+        }
+
+        Vector2 getPos() {
+            return this->position;
+        }
+
         SDL_Texture* getSprite(Player player);
-        void setSprite(SDL_Texture* sprite);
-        void setPlayer(int x, int y, const std::string& filePath);
-        Terrain setTerrain(int newX, int newY, SDL_Texture* sprite);
-        void updatePosition(int x, int y);
-        std::pair<int, int> getPos();
-        void setPos(int x, int y);
+        void setSprite(const std::string& filePath);
+        // Terrain setTerrain(int newX, int newY, SDL_Texture* sprite);
         SDL_Texture* getSprite();
-        void Player::render(SDL_Renderer* renderer);
+        void render();
 };      
 
 #endif
