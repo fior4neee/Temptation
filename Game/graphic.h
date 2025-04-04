@@ -28,21 +28,23 @@ private:
     SDL_Surface* loadedSurface;
     std::vector<Button*> buttons;
     std::vector<Terrain*> terrains;
+    GameState gameState;
 
 public:
-    Graphic() : window(nullptr), renderer(nullptr), texture(nullptr), loadedSurface(nullptr) {} // Constructor initializing pointers to nullptr
+    Graphic() : window(nullptr), renderer(nullptr), texture(nullptr), loadedSurface(nullptr), gameState(MENU) {} // Constructor initializing pointers to nullptr
     ~Graphic(); // Destructor to clean up resources
 
     void initSDL(int SCREEN_WIDTH, int SCREEN_HEIGHT, const char* WINDOW_TITLE = "Temptation");
     void quitSDL();
     void logErrorAndExit(const char* msg, const char* error);
-    
+    GameState getGameState() {return gameState;};
+    void setGameState(GameState state) {this -> gameState = state;};
     SDL_Texture* loadTexture(const std::string& filepath);
     SDL_Renderer* getRenderer() {return renderer;};
 
     void initMenu();
     void renderMenu(SDL_Renderer* renderer);
-    void renderLevel(SDL_Renderer* renderer, int levelNumber);
+    void renderLevel(SDL_Renderer* renderer, GameState gameState);
     void renderTexture(SDL_Texture* texture, int x, int y, int w, int h);
     void deleteTexture();
     // void handleEvent(const SDL_Event& e);

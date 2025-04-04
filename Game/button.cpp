@@ -1,8 +1,9 @@
 #include <string>
+#include <iostream>
 #include "button.h"
 
 Button::Button(Graphic& graphic, const std::string& imagePath, int x, int y, int w, int h, GameState gameState)
-        : graphic(graphic), renderer(graphic.getRenderer()), rect{x,y,w,h}, gameState(gameState) {
+        : graphic(graphic), rect{x,y,w,h}, gameState(gameState) {
             texture = graphic.loadTexture(imagePath); this->x = x; this->y = y; this->w = w; this->h = h; 
         }
 
@@ -38,21 +39,25 @@ void Button::handleEvent(const SDL_Event& e) {
 void Button::handleMouseMotion(const SDL_Event& e) {
     if (isWithinBounds(e.motion.x, e.motion.y)) {
         modulateTextureColor(this->texture, 255, 0, 0);
-        SDL_RenderCopy(renderer, texture, NULL, &rect);
+        SDL_RenderCopy(graphic.getRenderer(), texture, NULL, &rect);
         
     } else {
         modulateTextureColor(this->texture, 255, 255, 255);
-        SDL_RenderCopy(renderer, texture, NULL, &rect);
+        SDL_RenderCopy(graphic.getRenderer(), texture, NULL, &rect);
     }
 }
 
 void Button::handleMouseClick(const SDL_Event& e) {
+    // std::cout << "This button's graphic and renderer is: " << this << " and " << this->graphic.getRenderer() << "\n";
     if (isWithinBounds(e.button.x, e.button.y)) {
         if (e.type == SDL_MOUSEBUTTONDOWN && e.button.clicks == 2) {
-            std::cout << "Double click detected at Button " << this->getGameState() << "!\n";
+            GameState gameState = this->getGameState();
+            std::cout << "Double click detected at Button " << gameState << "!\n";
             try {
-                initLevel(this->getGameState());
-            } catch (std::exception& e) {
+                Graphic& game = this->getGraphic();
+                game.setGameState(gameState);
+                game.initLevel(this->getGameState());
+            } catch (std::exception& e) {//
                 std::cout << "Error found with initLevel " << e.what() << "!\n"; 
             } 
         }

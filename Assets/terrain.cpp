@@ -6,7 +6,7 @@
 #include "terrain.h"
 #include <fstream>
 
-Terrain::Terrain (Graphic& graphic, float positionX, float positionY, SDL_Texture* sprite) : graphic(graphic), position(positionX, positionY), terrain_sprite(nullptr) {
+Terrain::Terrain (Graphic& graphic, float positionX, float positionY, SDL_Texture* sprite) : graphic(graphic), renderer(graphic.getRenderer()), position(positionX, positionY), terrain_sprite(nullptr) {
     rect = { (int) positionX, (int)positionY, 50, 50 };
 }
 
@@ -40,3 +40,9 @@ void Graphic::saveTerrain(const std::string& terrainFilePath) {
     // std::cout << "All terrain saved successfully!";
 }
 
+// void Graphic::createTerrain(const std::string& filePath, float x, float y) {
+//     std::cout << "createTerrain called\n";
+//     std::cout << this << std::endl;
+//     SDL_Texture* temp_terrain = loadTexture(filePath.c_str());
+//     terrains.emplace_back(new Terrain(*this, x, y, temp_terrain));
+// }

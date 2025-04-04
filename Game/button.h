@@ -10,7 +10,6 @@ class Button : public Graphic {
     private:
         SDL_Rect rect;
         SDL_Texture* texture;
-        SDL_Renderer* renderer;
         Graphic& graphic;
         int x,y,w,h;
         GameState gameState;
@@ -18,6 +17,7 @@ class Button : public Graphic {
         Button(Graphic& graphic, const std::string& filePath, int x, int y, int w, int h, GameState gameState );
         ~Button() {};
         void render();
+        Graphic& getGraphic() { return graphic; }        
         bool isWithinBounds(int x, int y) const {
             if (x < rect.x) return false;
             if (x > rect.x + rect.w) return false;

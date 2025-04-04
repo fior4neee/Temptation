@@ -12,6 +12,7 @@ class Terrain : public Graphic {
         SDL_Rect rect;
         SDL_Texture* terrain_sprite;
         Graphic& graphic;
+        SDL_Renderer* renderer;
         std::string texturePath;
     public:
         Vector2 position;
