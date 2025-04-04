@@ -135,6 +135,7 @@ void Graphic::initMenu() {
         buttons.push_back(temp_button);
         horizontal += 200;
     }
+    buttons.push_back(new Button(*this, "Imgs/Menu/Buttons/Close.png", 1150, 0, 50, 50, QUIT));
 }
 
 void Graphic::renderMenu(SDL_Renderer* renderer) {
@@ -152,23 +153,38 @@ void Graphic::renderMenu(SDL_Renderer* renderer) {
 bool Graphic::initLevel(GameState gameState) {
     GameState initialGameState = this->getGameState();
     try {
-        std::cout << "Calling initLevel on Graphic instance: " << this << " with Renderer: " << this->getRenderer() << std::endl;
-        std::cout << "Init Level activated\n";
+        // std::cout << "Calling initLevel on Graphic instance: " << this << " with Renderer: " << this->getRenderer() << std::endl;
+        // std::cout << "Init Level activated\n";
         switch(gameState) {
             case LEVEL_1:
-                if (!loadTerrain("Assets/Terrain_Files/level1.txt")) return false;
+                if (!loadTerrain("Assets/Terrain_Files/level1.txt")) {
+                    this->setGameState(initialGameState); 
+                    return false;
+                }
                 break;
             case LEVEL_2:
-                if (!loadTerrain("Assets/Terrain_Files/level2.txt")) return false;
+                if (!loadTerrain("Assets/Terrain_Files/level2.txt")) {
+                    this->setGameState(initialGameState); 
+                    return false;
+                }
                 break;
             case LEVEL_3:
-                if (!loadTerrain("Assets/Terrain_Files/level3.txt")) return false;
+                if (!loadTerrain("Assets/Terrain_Files/level3.txt")) {
+                    this->setGameState(initialGameState); 
+                    return false;
+                }
                 break;
             case LEVEL_4:
-                if (!loadTerrain("Assets/Terrain_Files/level4.txt")) return false;
+                if (!loadTerrain("Assets/Terrain_Files/level4.txt")) {
+                    this->setGameState(initialGameState); 
+                    return false;
+                }
                 break;
             case LEVEL_5:
-                if (!loadTerrain("Assets/Terrain_Files/level5.txt")) return false;
+                if (!loadTerrain("Assets/Terrain_Files/level5.txt")) {
+                    this->setGameState(initialGameState); 
+                    return false;
+                }
                 break;
             case MENU:
             case QUIT:
@@ -198,6 +214,9 @@ void Graphic::renderLevel(SDL_Renderer* renderer, GameState gameState) {
     for (auto button : buttons) {
         button->render();
     }
+    for (auto terrain : terrains) {
+        terrain->render();
+    }
 }
 
 void Graphic::createTerrain(const std::string& filePath, float x, float y) {
@@ -210,22 +229,20 @@ void Graphic::createTerrain(const std::string& filePath, float x, float y) {
 bool Graphic::loadTerrain(const std::string& filePath) {
     GameState initialGameState = this->getGameState();
     // std::cout << "Load terrain called with renderer: " << this->getRenderer() << std::endl;
-    terrains.clear();
     std::ifstream myfile(filePath);
     std::string terrainFilePath;
     float tempX, tempY;
     if (!myfile.is_open()) {
         std::cerr << "Problem opening terrain file: " << filePath << std::endl;
         this->setGameState(initialGameState);
+        buttons.clear();
+        buttons.push_back(new Button(*this, "Imgs/Menu/Buttons/Back.png", 10, 10, 48, 48, MENU));
         return false; 
     }
     while (myfile >> terrainFilePath >> tempX >> tempY) {
         createTerrain(terrainFilePath, tempX, tempY);
     }
     myfile.close();
-    for (auto terrain : terrains) {
-        terrain->render();
-    }
     return true; 
 }
 
