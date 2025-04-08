@@ -1,4 +1,5 @@
 Imgs\Terrain\grass_block.png 0 750
+Imgs\Terrain\grass_block.png 0 500
 Imgs\Terrain\grass_block.png 50 750
 Imgs\Terrain\grass_block.png 100 750
 Imgs\Terrain\grass_block.png 150 750
@@ -6,7 +7,6 @@ Imgs\Terrain\grass_block.png 200 750
 Imgs\Terrain\grass_block.png 250 750
 Imgs\Terrain\grass_block.png 300 750
 Imgs\Terrain\grass_block.png 350 750
-Imgs\Terrain\grass_block.png 400 750
 Imgs\Terrain\grass_block.png 450 750
 Imgs\Terrain\grass_block.png 500 750
 Imgs\Terrain\grass_block.png 550 750

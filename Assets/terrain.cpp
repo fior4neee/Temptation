@@ -10,6 +10,11 @@ Terrain::Terrain (Graphic& graphic, float positionX, float positionY, SDL_Textur
     rect = { (int) positionX, (int)positionY, 50, 50 };
 }
 
+bool Terrain::isFallThrough() {
+    if (rect.y >= 750) return false;
+    return true;
+}
+
 SDL_Texture* Terrain::getSprite() {
     return terrain_sprite;
 }
@@ -27,8 +32,9 @@ void Terrain::setSprite(SDL_Texture* sprite) {
 
 void Terrain::render() {
     if (terrain_sprite) {
-        std::cout << "Rendering terrain " << terrain_sprite << "!\n"; 
+        // std::cout << "Rendering terrain " << terrain_sprite << "!\n"; 
         graphic.renderTexture(terrain_sprite, rect.x, rect.y, rect.w, rect.h);
+        // std::cout << "Terrain at: " << rect.x << " " << rect.y << "!\n";
     } else {
         std::cerr << "Terrain Render() Error: " << SDL_GetError() << " " << IMG_GetError();
     }

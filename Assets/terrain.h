@@ -22,7 +22,11 @@ class Terrain : public Graphic {
         SDL_Texture* getSprite();
         void setSprite(SDL_Texture* sprite);
         void render();
+        bool isFallThrough();
         std::string getTexturePath() { return texturePath;}
+        SDL_Rect getRect() {
+            return rect;
+        }
 };
 
 #endif

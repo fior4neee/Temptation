@@ -24,7 +24,7 @@ void Graphic::initSDL(int SCREEN_WIDTH, int SCREEN_HEIGHT, const char* WINDOW_TI
         logErrorAndExit("CreateWindow Error: ", SDL_GetError());
     }
     renderer = SDL_CreateRenderer(window, -1, 0);
-    std::cout << "Yo bro u just created a new renderer " << renderer << std::endl;
+    // std::cout << "Yo bro u just created a new renderer " << renderer << std::endl;
     if(renderer == nullptr){
 
         std::cout << "Error creating renderer" << SDL_GetError() << std::endl;
@@ -33,8 +33,13 @@ void Graphic::initSDL(int SCREEN_WIDTH, int SCREEN_HEIGHT, const char* WINDOW_TI
 }
 
 void Graphic::quitSDL() {
-    if(texture) {
+    if (player) {
+        std::cout << "Player successfully deleted.\n";
+        delete player;
+    }
+    if(texture || background_texture) {
         SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(background_texture);
         std::cout << "Texture destroyed successfully.\n";
         texture = nullptr;
     }
@@ -82,7 +87,7 @@ SDL_Texture* Graphic::loadTexture(const std::string& filepath) {
 
 void Graphic::renderTexture(SDL_Texture* texture, int x, int y, int w, int h) {
     if (!texture) {
-        logErrorAndExit("Couldn't load texture: ", SDL_GetError());
+        logErrorAndExit("Couldn't load texture: ", IMG_GetError());
     }
 
     SDL_Rect destRect = { x,y,w,h }; // positioning tool
@@ -103,16 +108,18 @@ void Graphic::deleteTexture() {
 }
 
 void Graphic::freeTextures() {
-    for (auto& terrain : terrains) {
-        if (terrain->getSprite()) {
-            SDL_DestroyTexture(terrain->getSprite());
-        }
-    }
-    terrains.clear(); 
-    for (auto& button : buttons) {
-        delete button;
-    }
-    buttons.clear();
+    // if (!terrains.empty()) {
+    //     for (auto& terrain : terrains) {
+    //         delete terrain;
+    //     }
+        terrains.clear();
+    // }
+    // if (!buttons.empty()) {
+    //     for (auto& button : buttons) {
+    //         delete button;
+    //     }
+        buttons.clear();
+    // }
 }
 
 
@@ -120,14 +127,16 @@ void Graphic::handleEvents(const SDL_Event& e) {
     for (auto button : buttons) {
         button->handleEvent(e);    
     }
+    // player->handleInput(e);
 }
 
 void Graphic::initMenu() {
     int horizontal = 150;
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     std::string backgroundIMG = "Imgs/Background/7481714.jpg";
-    SDL_Texture* background_texture = loadTexture(backgroundIMG.c_str());
-    renderTexture(background_texture, 0, 0, 1200, 800);
+    // SDL_Texture* background_texture = loadTexture(backgroundIMG.c_str());
+    background_texture = loadTexture(backgroundIMG.c_str());
+    // renderTexture(background_texture, 0, 0, 1200, 800);
     buttons.clear();
     for (int i = 1; i <= 5; i++) {
         std::string filePath = "Imgs/Menu/Levels/0" + std::to_string(i) + ".png";
@@ -141,9 +150,11 @@ void Graphic::initMenu() {
 void Graphic::renderMenu(SDL_Renderer* renderer) {
     // std::cout << "Render Menu called. \n";
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    std::string backgroundIMG = "Imgs/Background/7481714.jpg";
-    SDL_Texture* background_texture = loadTexture(backgroundIMG.c_str());
-    renderTexture(background_texture, 0, 0, 1200, 800);
+    // std::string backgroundIMG = "Imgs/Background/7481714.jpg";
+    // SDL_Texture* background_texture = loadTexture(backgroundIMG.c_str());
+    if (background_texture){
+        renderTexture(background_texture, 0, 0, 1200, 800);
+    }
     for (auto button : buttons) {
         button->render();
     }
@@ -151,10 +162,13 @@ void Graphic::renderMenu(SDL_Renderer* renderer) {
 }
 
 bool Graphic::initLevel(GameState gameState) {
+    freeTextures();
+    std::string newBGTest = "Imgs/Background/yrkGs9.png";
+    newBGTexture = loadTexture(newBGTest.c_str());
     GameState initialGameState = this->getGameState();
     try {
         // std::cout << "Calling initLevel on Graphic instance: " << this << " with Renderer: " << this->getRenderer() << std::endl;
-        // std::cout << "Init Level activated\n";
+        std::cout << "Init Level activated\n";
         switch(gameState) {
             case LEVEL_1:
                 if (!loadTerrain("Assets/Terrain_Files/level1.txt")) {
@@ -208,9 +222,9 @@ void Graphic::renderLevel(SDL_Renderer* renderer, GameState gameState) {
     // std::cout << "Render level called.\n";
     // std::cout << "Renderer in renderLevel: " << this->renderer << std::endl;
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    std::string newBGTest = "Imgs/Background/yrkGs9.png";
-    SDL_Texture* newBGTexture = loadTexture(newBGTest.c_str());
-    renderTexture(newBGTexture, 0, 0, 1200, 800);
+    if (newBGTexture && newBGTexture != background_texture) {
+        renderTexture(newBGTexture, 0, 0, 1200, 800);
+    }
     for (auto button : buttons) {
         button->render();
     }
@@ -227,6 +241,7 @@ void Graphic::createTerrain(const std::string& filePath, float x, float y) {
 }
 
 bool Graphic::loadTerrain(const std::string& filePath) {
+    this->freeTextures();
     GameState initialGameState = this->getGameState();
     // std::cout << "Load terrain called with renderer: " << this->getRenderer() << std::endl;
     std::ifstream myfile(filePath);
