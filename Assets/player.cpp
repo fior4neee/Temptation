@@ -79,7 +79,7 @@ void Player::applyGravity(float deltaTime) {
 }//
 static int frameCounter = 0;
 void Player::update(float deltaTime) {
-    bool grounded = false;
+    // bool grounded = false;
     frameCounter++;
     if (isRespawning) {
         respawnCooldown -= deltaTime;
@@ -111,21 +111,40 @@ void Player::update(float deltaTime) {
 
     for (auto& terrain : graphic.getTerrains()) {
         SDL_Rect terrainRect = terrain->getRect();
-        if (checkCollision(playerRect, terrainRect)) {
+        SDL_Rect sideCheckRect = this->getsidecheckRect();
+        SDL_Rect groundCheckRect = this->getGroundcheckRect();
+
+        if (checkCollision(sideCheckRect, terrainRect)) {
+            velocity.x = 0;
+            float newX;
+            std::cout << "collided with block" << std::endl;
+        } else {
+            std::cout << "not collided" << std::endl;
+        }
+
+        if (checkCollision(groundCheckRect, terrainRect)) {
+            // std::cout << "Colliding with " << terrainRect.x << " " << terrainRect.y << "\n!";
             float newY = terrainRect.y - frameHeight;
-            if (position.y > newY - 1.0f) {
+            // float newX = terrainRect.x - groundCheckRect.x;
+            velocity.y = 0;
+            onGround = true;
+            // if stuck then snap up
+            if (position.y > newY - 0.5f && position.y < newY + 12.0f) {
                 position.y = newY;
-                velocity.y = 0;
-                grounded = true;
             }
+            // if (position.x > newX - 1.0f && abs(position.y - terrainRect.y) > 50) {
+            //     velocity.x = 0;
+            // }
             break;
+        } else {
+            onGround = false;
         }
     }
 
-    // if (frameCounter % 20 == 0) {
-    //     std::cout << "Player Y: " << position.y << " | Velocity Y: " << velocity.y << "\n";
+    // if (frameCounter % 200 == 0) {
+    //     std::cout << "Player Y: " << position.y << " | Velocity Y: " << velocity.y << " X: " << position.x << " | Velocity X: " << velocity.x << "\n!";
     // }
-    onGround = grounded;
+    // onGround = grounded;
 }
 
 bool Player::checkCollision(const SDL_Rect& playerRect, const SDL_Rect& terrainRect) {

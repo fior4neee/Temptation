@@ -24,11 +24,14 @@ class Player : public Graphic{
         bool onGround = false;
         float gravity = 980.0f;
         float jumpForce = -500.0f;
-        bool wantsToDrop = false;
+        bool wantsToDrop = false;//
 
         bool isRespawning = false;
         float respawnCooldown = 0.0f;
         const float RESPAWN_DURATION = 5.0f;
+
+        Vector2 sideCheckSize = Vector2(50, 4);
+        Vector2 groundCheckSize = Vector2(20, 2);
     public:
         Vector2 position;
         Vector2 velocity;
@@ -53,6 +56,16 @@ class Player : public Graphic{
         SDL_Rect getPlayerRect() {
             SDL_Rect playerRect = {static_cast<int>(position.x), static_cast<int>(position.y), frameWidth, frameHeight};
             return playerRect;
+        }
+
+        SDL_Rect getsidecheckRect() {
+            SDL_Rect sideCheckRect = {static_cast<int>(position.x + 9), static_cast<int>(position.y + 22), static_cast<int>(sideCheckSize.x), static_cast<int>(sideCheckSize.y)};
+            return sideCheckRect;
+        }
+
+        SDL_Rect getGroundcheckRect() {
+            SDL_Rect groundCheckRect = {static_cast<int>(position.x + 15), static_cast<int>(position.y + frameHeight - 1), static_cast<int>(groundCheckSize.x), static_cast<int>(groundCheckSize.y)};
+            return groundCheckRect;
         }
         void respawn();
 };      
