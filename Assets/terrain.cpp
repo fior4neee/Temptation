@@ -15,6 +15,11 @@ Terrain::Terrain (Graphic& graphic, float positionX, float positionY, SDL_Textur
     this->canKill = canKill;
 }
 
+bool Terrain::isFallThrough() {
+    if (rect.y >= 750) return false;
+    return true;
+}
+
 SDL_Texture* Terrain::getSprite() {
     return terrain_sprite;
 }
@@ -25,7 +30,7 @@ Terrain::~Terrain() {
         terrain_sprite = nullptr;
     }
 }
-
+//
 void Terrain::setSprite(SDL_Texture* sprite) {
     this->terrain_sprite = sprite;
 }
@@ -33,14 +38,9 @@ void Terrain::setSprite(SDL_Texture* sprite) {
 void Terrain::render() {
     // bool useCamera = true;
     if (terrain_sprite) {
-<<<<<<< Updated upstream
-        std::cout << "Rendering terrain " << terrain_sprite << "!\n"; 
-        graphic.renderTexture(terrain_sprite, rect.x, rect.y, rect.w, rect.h);
-=======
         // std::cout << "Rendering terrain " << terrain_sprite << "!\n"; 
         graphic.renderTexture(terrain_sprite, static_cast<int>(position.x), static_cast<int>(position.y), 50, 50, true);
         // std::cout << "Terrain at: " << rect.x << " " << rect.y << "!\n";
->>>>>>> Stashed changes
     } else {
         std::cerr << "Terrain Render() Error: " << SDL_GetError() << " " << IMG_GetError();
     }

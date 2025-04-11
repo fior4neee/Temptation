@@ -1,13 +1,22 @@
 #include <iostream>
 #include <SDL_image.h>
 #include "player.h"
+#include <math.h> // fabs
 
-Player::Player(Graphic& graphic, float startX, float startY, SDL_Texture* character_sprite) : graphic(graphic), position(startX, startY), character_sprite(nullptr) {}
+Player::Player(Graphic& graphic, float startX, float startY, SDL_Texture* character_sprite) : graphic(graphic), position(startX, startY), character_sprite(character_sprite) {
+    frameWidth = 50;
+    frameHeight = 50;
+    currentFrame = 0;
+    velocity = {0, 0};
+    onGround = false;
+    jumpForce = -500.0f;
+    gravity = 980.0f;
+    wantsToDrop = false;
+}
 
 Player::~Player() {
     if (character_sprite) {
         SDL_DestroyTexture(character_sprite);
-        character_sprite = nullptr;
     }
 }
 
@@ -16,8 +25,7 @@ SDL_Texture* Player::getSprite() {
 }
 
 void Player::setSprite(const std::string& filePath) {
-    SDL_Texture* sprite = graphic.loadTexture(filePath);
-    this->character_sprite = sprite;
+    character_sprite = graphic.loadTexture(filePath);
 }
 
 void Player::setParticleTexture(const std::string& filePath) {
@@ -26,11 +34,6 @@ void Player::setParticleTexture(const std::string& filePath) {
 
 void Player::render() {
     if (character_sprite) {
-<<<<<<< Updated upstream
-        SDL_Rect dst = {velocityX, velocityY, 50, 50}; // Example size
-        SDL_RenderCopy(graphic.getRenderer(), character_sprite, NULL, &dst);
-    }
-=======
         SDL_Rect srcRect = {currentFrame * frameWidth, 0, frameWidth, frameHeight};
         // SDL_Rect dstRect = {(int)position.x, (int)position.y, frameWidth, frameHeight}; // Example size
         // SDL_RenderCopy(graphic.getRenderer(), character_sprite, &src, &dst);
@@ -198,7 +201,6 @@ void Player::update(float deltaTime) {
         return;
     }
 
-    // Check vertical collision
     for (auto& terrain : graphic.getTerrains()) {
         SDL_Rect terrainRect = terrain->getRect();
         SDL_Rect groundCheckRect = this->getGroundcheckRect();
@@ -208,7 +210,6 @@ void Player::update(float deltaTime) {
         nextGroundCheckRect.y += static_cast<int>(velocity.y * deltaTime);
         nextHeadbuttRect.y -= frameHeight + 1;
 
-        // If collide next frame, velocity = 0
         if (checkCollision(nextGroundCheckRect, terrainRect)) {
             if (terrain->getCanKill()) {
                 dustExplosion();
@@ -235,7 +236,6 @@ void Player::update(float deltaTime) {
             velocity.y = 50;
         }
 
-        // Check if grounded
         if (checkCollision(groundCheckRect, terrainRect)) {
             // if (terrain->getCanKill()) {
             //     dustExplosion();
@@ -257,7 +257,6 @@ void Player::update(float deltaTime) {
         }
     }
 
-    // Check horizontal collision
     for (auto& terrain : graphic.getTerrains()) {
         SDL_Rect terrainRect = terrain->getRect();
         SDL_Rect nextFrameRect = {playerRect.x + 9, playerRect.y + 5, playerRect.w - 18, playerRect.h - 10};
@@ -303,5 +302,4 @@ void Player::respawn() {
 
 void Player::handleWin() {
     isWin = true;
->>>>>>> Stashed changes
 }

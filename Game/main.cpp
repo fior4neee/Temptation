@@ -1,16 +1,6 @@
 #include <iostream>
 #include <SDL.h>
 #include "graphic.h"
-<<<<<<< Updated upstream
-
-int main(int argc, char* argv[]) {
-    Graphic game;
-    game.initSDL(1200, 800, "Temptation");
-    std::cout << "New Graphic: " << &game << "\n";
-    SDL_Renderer* renderer = game.getRenderer(); 
-    game.initMenu();
-
-=======
 #include "player.h"
 #include "checkpoint.h"
 
@@ -42,27 +32,26 @@ int main(int argc, char* argv[]) {
     Checkpoint* checkpoint = new Checkpoint(game, "Imgs/Items/Checkpoints/Checkpoint/Checkpoint (Flag Idle)(64x64).png", {550 + CHECKPOINT_OFFSET_X, 700 + CHECKPOINT_OFFSET_Y}, CHECKPOINT_COLLISION_BOX);
     player->setCheckpoint(checkpoint);
 
->>>>>>> Stashed changes
     // Start with the MENU state
     GameState currentState = MENU; 
     bool running = true;
     bool levelInitialized = false;
     SDL_Event e;
+    Uint32 lastTicks = SDL_GetTicks();
 
     while (running) {
-<<<<<<< Updated upstream
-=======
         Uint32 frameStartTicks = SDL_GetTicks();
 
->>>>>>> Stashed changes
         while (SDL_PollEvent(&e)) {
             game.handleEvents(e);
             if (e.type == SDL_QUIT) {
                 running = false; 
                 break;
             }
+            if (currentState >= LEVEL_1 && currentState <= LEVEL_5 && player) {
+                player->handleInput(e);
+            }
         }
-
         // Clear the renderer
         SDL_RenderClear(renderer);
         GameState nextState = game.getGameState();
@@ -85,11 +74,10 @@ int main(int argc, char* argv[]) {
             case LEVEL_5:
                 if (!levelInitialized) {
                     game.initLevel(currentState); // Render the level
+                    player->setPos(0, 400);
                     levelInitialized = true;
                 }
                 game.renderLevel(renderer, currentState);
-<<<<<<< Updated upstream
-=======
 
                 if (player) {
                     player->render();
@@ -107,13 +95,11 @@ int main(int argc, char* argv[]) {
 
                 game.updateCamera(player->getPos().x, SCREEN_WIDTH, LEVEL_WIDTH);
 
->>>>>>> Stashed changes
                 break;
             case QUIT:
                 running = false;
                 break;
         }
-
         SDL_RenderPresent(renderer);
 
         Uint32 frameEndTicks = SDL_GetTicks();

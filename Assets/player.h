@@ -11,15 +11,11 @@
 #include "terrain.h"
 #include "particle.h"
 
-class Player {
+class Player : public Graphic{
     protected:
-        int velocityX;
-        int velocityY;
         SDL_Texture* character_sprite;
         SDL_Texture* particleTexture;
         Graphic& graphic;
-<<<<<<< Updated upstream
-=======
 
         int frameWidth = 50;
         int frameHeight = 50;
@@ -48,31 +44,22 @@ class Player {
         float maxParticleSize = 15.0f;
         int numParticles = 100;
         float minSizeFactor = 0.1f;
->>>>>>> Stashed changes
     public:
         Vector2 position;
         Vector2 velocity;
         Player(Graphic& graphic, float startX, float startY, SDL_Texture* character_sprite);
         ~Player();
 
-        void update(float deltaTime) {
-            position += velocity * deltaTime;
-        }
-        void setPos(Vector2 position) {
-            this->position = position;
-        }
-
+        void update(float deltaTime);
+        void setPos(float x, float y) {this->position = {x,y};};
         Vector2 getPos() {
             return this->position;
         }
 
-        SDL_Texture* getSprite(Player player);
         void setSprite(const std::string& filePath);
         // Terrain setTerrain(int newX, int newY, SDL_Texture* sprite);
         SDL_Texture* getSprite();
         void render();
-<<<<<<< Updated upstream
-=======
         void setParticleTexture(const std::string& filePath);
 
         void handleInput(const SDL_Event& e);
@@ -92,7 +79,6 @@ class Player {
         }
         void respawn();
         void handleWin();
->>>>>>> Stashed changes
 };      
 
 #endif

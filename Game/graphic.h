@@ -10,11 +10,8 @@
 
 class Terrain;
 class Button;
-<<<<<<< Updated upstream
-=======
 class Player;
 class Checkpoint;
->>>>>>> Stashed changes
 
 enum GameState {
     MENU,
@@ -32,27 +29,21 @@ private:
     SDL_Renderer* renderer;
     SDL_Texture* texture;
     SDL_Surface* loadedSurface;
-<<<<<<< Updated upstream
-=======
 
     Player* player;
->>>>>>> Stashed changes
     std::vector<Button*> buttons;
     std::vector<Terrain*> terrains;
     Checkpoint* checkpoint;
     GameState gameState;
-<<<<<<< Updated upstream
-=======
 
     SDL_Texture* background_texture;
     SDL_Texture* newBGTexture;
->>>>>>> Stashed changes
 
     SDL_Rect cameraRect = {0, 0, 0, 0};
     int screenWidth;
     int screenHeight;
 public:
-    Graphic() : window(nullptr), renderer(nullptr), texture(nullptr), loadedSurface(nullptr), gameState(MENU) {} // Constructor initializing pointers to nullptr
+    Graphic() : window(nullptr), renderer(nullptr), texture(nullptr), loadedSurface(nullptr), gameState(MENU), player(nullptr), background_texture(nullptr), newBGTexture(nullptr){} // Constructor initializing pointers to nullptr
     ~Graphic(); // Destructor to clean up resources
 
     void initSDL(int SCREEN_WIDTH, int SCREEN_HEIGHT, const char* WINDOW_TITLE = "Temptation");
@@ -72,11 +63,6 @@ public:
     // void handleEvent(const SDL_Event& e);
 
     void handleEvents(const SDL_Event& e);
-<<<<<<< Updated upstream
-    void modulateTextureColor(SDL_Texture* texture, Uint8 red, Uint8 green, Uint8 blue);
-
-    void createTerrain(const std::string& filePath, float x, float y);
-=======
     void setPlayer(Player* player) {this->player = player;};
     void setCheckpoint(Checkpoint* checkpoint) {this->checkpoint = checkpoint;}
     Checkpoint* getCheckpoint() {return checkpoint;}
@@ -88,7 +74,6 @@ public:
 
     void createTerrain(const std::string& filePath, float x, float y, Vector2 offset, Vector2 collisionBox, bool canKill);
     std::vector<Terrain*> getTerrains() {return terrains;};
->>>>>>> Stashed changes
     bool loadTerrain(const std::string& filePath);
     void saveTerrain(const std::string& terrainFilePath);
     bool initLevel(GameState gameState);

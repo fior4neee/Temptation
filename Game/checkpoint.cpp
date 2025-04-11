@@ -13,7 +13,6 @@ Checkpoint::Checkpoint(Graphic& graphic, const std::string& imagePath, Vector2 p
     this->collisionBox.x = static_cast<int>(position.x + collisionBox.x) + 10;
     this->collisionBox.y = static_cast<int>(position.y + collisionBox.y) + 16;
 
-    // Define the individual frames within the texture
     for (int i = 0; i < NUM_FRAMES; ++i) {
         animationFrames[i].x = i * rect.w;
         animationFrames[i].y = 0;
@@ -29,11 +28,8 @@ SDL_Texture* Checkpoint::getTexture() {
 void Checkpoint::render() {
     if (texture) {
         SDL_Rect sourceRect = animationFrames[currentFrame];
-        // SDL_Rect destRect = this->rect;
-        // SDL_RenderCopy(graphic.getRenderer(), texture, &sourceRect, &destRect);
         graphic.renderTexture(texture, &sourceRect, this->rect.x, this->rect.y, this->rect.w, this->rect.h, true);
 
-        // Optional: Draw collision box
         const SDL_Rect& camera = graphic.getCameraRect();
         SDL_Rect collisionScreenRect = {
             collisionBox.x - camera.x,
