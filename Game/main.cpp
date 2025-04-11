@@ -16,6 +16,8 @@ const int SCREEN_WIDTH = 1200;
 const int SCREEN_HEIGHT = 800;
 const int LEVEL_WIDTH = 3000;
 
+bool actually_quit = false;
+
 int main(int argc, char* argv[]) {
     Graphic game;
     game.initSDL(SCREEN_WIDTH, SCREEN_HEIGHT, "Temptation");
@@ -97,20 +99,22 @@ int main(int argc, char* argv[]) {
 
                 break;
             case QUIT:
+                actually_quit = true;
                 running = false;
                 break;
         }
         SDL_RenderPresent(renderer);
+        if (!actually_quit) {
+            Uint32 frameEndTicks = SDL_GetTicks();
+            Uint32 frameDurationMs = frameEndTicks - frameStartTicks;
 
-        Uint32 frameEndTicks = SDL_GetTicks();
-        Uint32 frameDurationMs = frameEndTicks - frameStartTicks;
+            if (frameDurationMs < TARGET_FRAMETIME) {
+                Uint32 delayTime = static_cast<Uint32>(TARGET_FRAMETIME - frameDurationMs);
+                SDL_Delay(delayTime);
+            }
 
-        if (frameDurationMs < TARGET_FRAMETIME) {
-            Uint32 delayTime = static_cast<Uint32>(TARGET_FRAMETIME - frameDurationMs);
-            SDL_Delay(delayTime);
+            lastTicks = SDL_GetTicks();
         }
-
-        lastTicks = SDL_GetTicks();
     }
 
     game.quitSDL();

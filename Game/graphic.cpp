@@ -39,19 +39,15 @@ void Graphic::initSDL(int SCREEN_WIDTH, int SCREEN_HEIGHT, const char* WINDOW_TI
 
 void Graphic::quitSDL() {
     if (player) {
+        if (player->getCheckpoint()) {
+            player->getCheckpoint()->free();
+            checkpoint = nullptr;
+            std::cout << "Checkpoint destroyed successfully.\n";
+        }
+    
         delete player;
         player = nullptr;
         std::cout << "Player successfully deleted.\n";
-    } else {
-        // std::cout << "Player was null.\n";
-    }
-
-    if (player->getCheckpoint()) {
-        player->getCheckpoint()->free();
-        checkpoint = nullptr;
-        std::cout << "Checkpoint destroyed successfully.\n";
-    } else {
-        // std::cout << "Checkpoint was null.\n";
     }
 
     if (!buttons.empty()) {
