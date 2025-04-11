@@ -15,9 +15,9 @@ SDL_Texture* Button::getTexture() {
     return this->texture;
 }
 
-void Button::render() {
+void Button::render(bool useCamera) {
     if (texture) {
-        graphic.renderTexture(texture, rect.x, rect.y, rect.w, rect.h);
+        graphic.renderTexture(texture, rect.x, rect.y, rect.w, rect.h, useCamera);
         // std::cout << "Rendering successful: " << texture << "\n";
     } else {
         std::cout << "Button Error: " << SDL_GetError();

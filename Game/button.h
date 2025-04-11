@@ -16,7 +16,7 @@ class Button : public Graphic {
     public: 
         Button(Graphic& graphic, const std::string& filePath, int x, int y, int w, int h, GameState gameState );
         ~Button() {};
-        void render();
+        void render(bool useCamera);
         Graphic& getGraphic() { return graphic; }        
         bool isWithinBounds(int x, int y) const {
             if (x < rect.x) return false;

@@ -4,10 +4,15 @@
 #include <string>
 #include <string.h>
 #include "terrain.h"
+#include "vector2.h"
 #include <fstream>
 
-Terrain::Terrain (Graphic& graphic, float positionX, float positionY, SDL_Texture* sprite) : graphic(graphic), renderer(graphic.getRenderer()), position(positionX, positionY), terrain_sprite(sprite) {
-    rect = { (int) positionX, (int)positionY, 50, 50 };
+Terrain::Terrain (Graphic& graphic, float positionX, float positionY, SDL_Texture* sprite, Vector2 offset, Vector2 collisionBox, bool canKill) 
+    : graphic(graphic), renderer(graphic.getRenderer()), position(positionX, positionY), terrain_sprite(sprite) {
+    rect = { static_cast<int>(positionX + offset.x), static_cast<int>(positionY + offset.y), static_cast<int>(collisionBox.x), static_cast<int>(collisionBox.y) };
+    this->offset = offset;
+    this->collisionBox = collisionBox;
+    this->canKill = canKill;
 }
 
 SDL_Texture* Terrain::getSprite() {
@@ -26,9 +31,16 @@ void Terrain::setSprite(SDL_Texture* sprite) {
 }
 
 void Terrain::render() {
+    // bool useCamera = true;
     if (terrain_sprite) {
+<<<<<<< Updated upstream
         std::cout << "Rendering terrain " << terrain_sprite << "!\n"; 
         graphic.renderTexture(terrain_sprite, rect.x, rect.y, rect.w, rect.h);
+=======
+        // std::cout << "Rendering terrain " << terrain_sprite << "!\n"; 
+        graphic.renderTexture(terrain_sprite, static_cast<int>(position.x), static_cast<int>(position.y), 50, 50, true);
+        // std::cout << "Terrain at: " << rect.x << " " << rect.y << "!\n";
+>>>>>>> Stashed changes
     } else {
         std::cerr << "Terrain Render() Error: " << SDL_GetError() << " " << IMG_GetError();
     }
